@@ -1,0 +1,83 @@
+<resources>
+    <string name="app_name">ConectGuitar</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Main Activity -->
+    <string name="Login">Login</string>
+    <string name="Sign_in">Cadastrar</string>
+
+    <!-- SignUp -->
+    <string name="name">Nome</string>
+    <string name="email">Email</string>
+    <string name="user">Usuário</string>
+    <string name="password">Senha</string>
+    <string name="rpassword">Repetir Senha</string>
+    <string name="teacher">Professor</string>
+    <string name="save">Salvar</string>
+
+    <!-- Display -->
+    <string name="welcome">Bem vindo ao Conect Guitar!</string>
+    <string name="welcome2">Clique na imagem abaixo e se divirta!</string>
+    <string name="students">Aluno</string>
+
+    <!-- Stage -->
+    <string name="stage1">Etapa 1</string>
+    <string name="stage2">Etapa 2</string>
+    <string name="stage3">Etapa 3</string>
+    <string name="stage4">Etapa 4</string>
+    <string name="stage5">Etapa 5</string>
+
+    <!-- Lesson -->
+    <string name="lesson1">Aula 1</string>
+    <string name="lesson2">Aula 2</string>
+    <string name="lesson3">Aula 3</string>
+    <string name="lesson4">Aula 4</string>
+    <string name="lesson5">Aula 5</string>
+
+    <!-- ActivityAudioApp -->
+    <string name="appname">TCC Conect Guitar</string>
+    <string name="student">Aluno</string>
+    <string name="record">Gravar</string>
+    <string name="listen">Escutar</string>
+    <string name="songduration">Duração</string>
+
+    <!-- Main Activity
+    <string name="Login">Login</string>
+    <string name="Sign_in">Sign in</string>
+
+    SignUp
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="user">User</string>
+    <string name="password">Password</string>
+    <string name="rpassword">Repeat Password</string>
+    <string name="teacher">Teacher</string>
+    <string name="save">Save</string>
+
+    Display
+    <string name="welcome">Welcome to conect guitar!</string>
+    <string name="welcome2">Click on the image below to start!</string>
+    <string name="students">Students</string>
+
+    Stage
+    <string name="stage1">Stage 1</string>
+    <string name="stage2">Stage 2</string>
+    <string name="stage3">Stage 3</string>
+    <string name="stage4">Stage 4</string>
+    <string name="stage5">Stage 5</string>
+
+    Lesson
+    <string name="lesson1">Lesson 1</string>
+    <string name="lesson2">Lesson 2</string>
+    <string name="lesson3">Lesson 3</string>
+    <string name="lesson4">Lesson 4</string>
+    <string name="lesson5">Lesson 5</string>
+
+    ActivityAudioApp
+    <string name="appname">TCC Conect Guitar</string>
+    <string name="student">Student</string>
+    <string name="record">Record</string>
+    <string name="listen">Listen</string>
+    <string name="songduration">Song Duration</string>
+    -->
+</resources>
