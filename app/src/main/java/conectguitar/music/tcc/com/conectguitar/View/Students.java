@@ -42,6 +42,7 @@ public class Students extends Activity {
     private int studentsIdRelease=0;
     int id;
     private static String url = "http://conectguitarws-conectguitar.rhcloud.com/teachers/";
+    //private static String url = "http://localhost:8000/teachers/";
     // users JSONArray
     JSONArray users = null;
     // Hashmap for ListView

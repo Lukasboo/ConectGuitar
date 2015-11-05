@@ -52,6 +52,7 @@ public class MainActivity extends Activity {
     static String validation;
     private ProgressDialog pDialog;
     static String response = null;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,7 @@ public class MainActivity extends Activity {
             passwordstr = b.getText().toString();
 
             new HttpAsyncTask().execute("http://conectguitarws-conectguitar.rhcloud.com/users/login");
+            //new HttpAsyncTask().execute("http://localhost:8000/users/login");
 
         }
 
@@ -203,17 +205,34 @@ public class MainActivity extends Activity {
                         int release_id = c.getInt("release_id");
                         int teacher_id = c.getInt("teacher_id");
 
-                        Intent intent = new Intent(MainActivity.this, Display.class);
-                        intent.putExtra("id", id);
-                        intent.putExtra("student_id", student_id);
-                        intent.putExtra("name", name);
-                        intent.putExtra("email", email);
-                        intent.putExtra("uname", uname);
-                        intent.putExtra("usertype", usertype);
-                        intent.putExtra("idrelease", release_id);
-                        intent.putExtra("idteacher", teacher_id);
+                        if(usertype == 1) {
 
-                        startActivity(intent);
+                            intent = new Intent(MainActivity.this, Display.class);
+                            intent.putExtra("id", id);
+                            intent.putExtra("student_id", student_id);
+                            intent.putExtra("name", name);
+                            intent.putExtra("email", email);
+                            intent.putExtra("uname", uname);
+                            intent.putExtra("usertype", usertype);
+                            intent.putExtra("idrelease", release_id);
+                            intent.putExtra("idteacher", teacher_id);
+
+                            startActivity(intent);
+                        } else {
+
+                            intent = new Intent(MainActivity.this, Stage.class);
+                            intent.putExtra("id", id);
+                            intent.putExtra("student_id", student_id);
+                            intent.putExtra("name", name);
+                            intent.putExtra("email", email);
+                            intent.putExtra("uname", uname);
+                            intent.putExtra("usertype", usertype);
+                            intent.putExtra("idrelease", release_id);
+                            intent.putExtra("idteacher", teacher_id);
+
+                            startActivity(intent);
+
+                        }
                     }
 
                 } catch (JSONException e) {

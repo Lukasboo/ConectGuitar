@@ -16,9 +16,12 @@
     <string name="save">Salvar</string>
 
     <!-- Display -->
-    <string name="welcome">Bem vindo ao Conect Guitar!</string>
-    <string name="welcome2">Clique na imagem abaixo e se divirta!</string>
+    <string name="welcome">Clique em Aluno para ver o seus alunos ou em Media para ouvir todas as aulas disponíveis!</string>
+    <string name="welcome2">Clique em Media para ouvir todas as aulas disponíveis!</string>
+    <string name="welcome3">Abaixo está a lista de audios recentes enviados por seus alunos.</string>
+    <string name="welcome4">Após voce baixar o audio ele não irá mais aparecer aqui neste tela.</string>
     <string name="students">Aluno</string>
+    <string name="media">Media</string>
 
     <!-- Stage -->
     <string name="stage1">Etapa 1</string>

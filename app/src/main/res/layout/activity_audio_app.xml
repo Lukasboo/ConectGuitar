@@ -5,7 +5,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    android:background="#088A85"
+    android:background="#D8D8D8"
     android:screenOrientation="portrait"
     tools:context=".AudioAppActivity"
     >
@@ -13,7 +13,7 @@
     <TextView
         android:text="@string/appname"
         android:textAlignment="center"
-        android:textColor="#FFFFFF"
+        android:textColor="#2E2E2E"
         android:textStyle="bold"
         android:gravity="center"
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
         android:id="@+id/edStudent"
         android:enabled="false"
         android:textAlignment="center"
-        android:textColor="#FFFFFF"
+        android:textColor="#2E2E2E"
         android:textStyle="bold"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
         android:id="@+id/edLesson"
         android:enabled="false"
         android:textAlignment="center"
-        android:textColor="#FFFFFF"
+        android:textColor="#2E2E2E"
         android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -57,7 +57,7 @@
         <CheckBox
             android:id="@+id/chkRecord"
             android:text="@string/record"
-            android:textColor="#FFFFFF"
+            android:textColor="#2E2E2E"
             android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
             android:id="@+id/chkListen"
             android:text="@string/listen"
             android:checked="true"
-            android:textColor="#FFFFFF"
+            android:textColor="#2E2E2E"
             android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

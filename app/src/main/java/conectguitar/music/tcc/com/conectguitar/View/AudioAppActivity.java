@@ -3,13 +3,14 @@ package conectguitar.music.tcc.com.conectguitar.View;
 /**
  * Created by lucas on 06/10/15.
  */
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,49 +26,61 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.DataOutputStream;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
 
 import conectguitar.music.tcc.com.conectguitar.R;
 
 public class AudioAppActivity extends Activity implements View.OnClickListener {
 
-    private static MediaRecorder mediaRecorder;
     private static MediaPlayer mediaPlayer;
+    private static MediaRecorder mediaRecorder;
+    private Handler durationHandler = new Handler();
 
     private static String audioFilePath;
-    private static ImageButton stopButton;
-    private static ImageButton playButton;
-    private static ImageButton recordButton;
-    private ProgressDialog pDialog;
-    private SeekBar seekbar;
-
-    private Handler durationHandler = new Handler();
-    public TextView songName, duration;
-
     private double timeElapsed = 0, finalTime = 0;
     private int forwardTime = 2000, backwardTime = 2000;
-
     private boolean isRecording = false;
-
-    private int nstage =0, nLesson =0, forinit=0, forend=0, student_id=0;
-    private String username, name;
-
-    private static final int SELECT_AUDIO = 2;
-    String selectedPath = "";
 
     EditText edLesson, edStudent;
     CheckBox chkRecord, chkListen;
     ImageButton btnInterrogation;
     Button btnSendAudio;
+    private static ImageButton stopButton;
+    private static ImageButton playButton;
+    private static ImageButton recordButton;
+    private ProgressDialog pDialog;
+    private SeekBar seekbar;
+    public TextView songName, duration;
+
+
     int serverResponseCode = 0;
+    private int nstage =0, nLesson =0, forinit=0, forend=0, student_id=0;
+    private String username, name;
+
     ProgressDialog dialog = null;
+    private static final int SELECT_AUDIO = 2;
+    String selectedPath = "";
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,12 +101,6 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
         nLesson = intent.getIntExtra("nLesson", 0);
         name = intent.getStringExtra("name");
         //name = getIntent().getStringExtra("name");
-
-
-
-        audioFilePath =
-                (Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_MUSIC) + "/ConectGuitarAudios/" + "Stage" + nstage + "/" + "Lesson" + nLesson + "/" + "Lesson" + nLesson + ".mp3");
 
         /*SharedPreferences globalVar = getSharedPreferences("globalVariables", MODE_PRIVATE);
         name = globalVar.getString("name", null);*/
@@ -144,9 +151,18 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
         }
 
         //getAlbumStoragePublicDir("Lesson");
+        getAlbumStorageDownloadDir("AudiosDownloads");
         getAlbumStorageDir("ConectGuitarAudios");
         getAlbumStorageSubDir("Stage");
         getAlbumStorageSubsubDir("Lesson");
+
+
+        audioFilePath =
+                (Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_MUSIC) + "/ConectGuitarAudios/" + "Stage" + nstage + "/" + "Lesson" + nLesson + "/" + "Lesson" + nLesson + ".mp3");
+
+
+
 
         /*audioFilePath =
                 Environment.getExternalStorageDirectory().getAbsolutePath()
@@ -159,7 +175,8 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
 
     }
 
-    private class HttpAsyncTask extends AsyncTask<Void, Void, Void> {
+    //SEND AUDIO, FUNCIONA MAS PROVAVELMENTE CORROMPE O AUDIO
+    /*private class HttpAsyncTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -176,7 +193,8 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
         protected Void doInBackground(Void... params) {
 
 
-            String upLoadServerUri = "http://conectguitarws-conectguitar.rhcloud.com/fileentry/add/" + student_id;
+            String upLoadServerUri = "http://conectguitarws-conectguitar.rhcloud.com/fileentry/add/" + student_id + "/" + nstage + "/" + nLesson ;
+            //String upLoadServerUri = "http://http://localhost:8000/conectguitarws/fileentry/add/" + student_id + "/" + nstage + "/" + nLesson ;
             String fileName = audioFilePath;
             HttpURLConnection conn = null;
             DataOutputStream dos = null;
@@ -192,7 +210,7 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
                 Log.e("uploadFile", "Source File Does not exist");
                 //return 0;
             }
-            try { // open a URL connection to the Servlet
+            try { // open a URL connection
                 FileInputStream fileInputStream = new FileInputStream(sourceFile);
                 URL url = new URL(upLoadServerUri);
                 conn = (HttpURLConnection) url.openConnection(); // Open a HTTP  connection to  the URL
@@ -278,12 +296,24 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
 
         }
 
-    }
+    }*/
+
+    
 
     protected boolean hasMicrophone() {
         PackageManager pmanager = this.getPackageManager();
         return pmanager.hasSystemFeature(
                 PackageManager.FEATURE_MICROPHONE);
+    }
+
+    public File getAlbumStorageDownloadDir(String albumName) {
+
+        File file = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_MUSIC), albumName);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return file;
     }
 
     public File getAlbumStorageDir(String albumName) {
@@ -326,6 +356,29 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
 
                 if (!folder.exists()) {
                     folder.mkdir();
+
+
+                        //File file = new File(getExternalFilesDir(null), folder);
+                        try {
+                            InputStream in = getAssets().open(SubsubalbumName + y + ".mp3");
+                            OutputStream out = new FileOutputStream(folder + "/" + SubsubalbumName + y + ".mp3");
+                            byte[] buffer = new byte[1024];
+                            int read = in.read(buffer);
+                            while (read != -1) {
+                                out.write(buffer, 0, read);
+                                read = in.read(buffer);
+                            }
+                            out.close();
+                            in.close();
+                        } catch (IOException e) {
+                            //Log.e(e);
+                        }
+
+
+//Now copy is to os. I'd recommend using Apache Commons IO
+                    //org.apache.commons.io.IOUtils.copy(is, os));
+
+
                 }
                 //return folder;
 
@@ -338,7 +391,7 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
 
     public void recordAudio (View view) throws IOException
     {
-        chooseListenRec();
+        //chooseListenRec();
 
         isRecording = true;
         stopButton.setEnabled(true);
@@ -353,6 +406,7 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
             mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
             mediaRecorder.setOutputFile(audioFilePath);
             mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            //mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
             mediaRecorder.prepare();
         } catch (Exception e) {
             e.printStackTrace();
@@ -395,15 +449,41 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
     public void playAudio (View view) throws IOException
     {
 
-        chooseListenRec();
+        //chooseListenRec();
 
         playButton.setEnabled(false);
         recordButton.setEnabled(false);
         stopButton.setEnabled(true);
         stopButton.setImageResource(R.drawable.pausebutton);
 
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setDataSource(audioFilePath);
+        /*AssetFileDescriptor audioFileDescriptor;
+        audioFileDescriptor = getAssets().openFd("Lesson" + nLesson + ".mp3");
+        mediaPlayer.setDataSource(audioFileDescriptor.getFileDescriptor(),
+                audioFileDescriptor.getStartOffset(), audioFileDescriptor.getLength());*/
+
+        if(chkListen.isChecked()) {
+
+            mediaPlayer = new MediaPlayer();
+            AssetFileDescriptor descriptor = AudioAppActivity.this.getAssets().openFd("Lesson" + nLesson + ".mp3");
+            mediaPlayer.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength() );
+            descriptor.close();
+
+        } else {
+            audioFilePath =
+                    (Environment.getExternalStoragePublicDirectory(
+                            Environment.DIRECTORY_MUSIC) + "/ConectGuitarAudios/" + "Stage" + nstage + "/" + "Lesson" + nLesson + "/" + "Lesson" + nLesson + ".mp3");
+
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setDataSource(audioFilePath);
+
+        }
+
+
+
+
+        //mediaPlayer = new MediaPlayer();
+        //mediaPlayer.setDataSource(audioFilePath);
+        //mediaPlayer.setDataSource();
         mediaPlayer.prepare();
         mediaPlayer.start();
 
@@ -457,19 +537,23 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    public void chooseListenRec() {
+    /*public void chooseListenRec() {
 
         if(chkListen.isChecked()) {
-            audioFilePath =
+            /*audioFilePath =
                     (Environment.getExternalStoragePublicDirectory(
-                            Environment.DIRECTORY_MUSIC) + "/ConectGuitarAudios/" + "Stage" + nstage + "/" + "Lesson" + nLesson + "/" + "Lesson" + nLesson + ".mp3");
-        } else {
+                            Environment.DIRECTORY_MUSIC) + "/ConectGuitarAudios/" + "Stage" + nstage + "/" + "Lesson" + nLesson + "/" + "Lesson" + nLesson + ".mp3");*/
+
+            //R.raw.sample_song
+
+
+        /*} else {
             audioFilePath =
                     (Environment.getExternalStoragePublicDirectory(
                             Environment.DIRECTORY_MUSIC) + "/ConectGuitarAudios/" + "Stage" + nstage + "/" + "Lesson" + nLesson + "/" + "RecLesson" + nLesson + ".mp3");
         }
 
-    }
+    }*/
 
     public void listenCheckBox(View view) {
 
@@ -498,6 +582,9 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
 
     }
+
+
+
 }
 
 

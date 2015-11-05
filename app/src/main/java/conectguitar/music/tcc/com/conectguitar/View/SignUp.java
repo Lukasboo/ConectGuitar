@@ -42,29 +42,15 @@ import conectguitar.music.tcc.com.conectguitar.R;
 public class SignUp extends Activity {
 
     User user;
-    private ProgressDialog pDialog;
-    private static String url = "http://conectguitarws-conectguitar.rhcloud.com/users";
-    private static String urlt = "http://conectguitarws-conectguitar.rhcloud.com/teachers";
     DatabaseHelper helper = new DatabaseHelper(this);
+    private ProgressDialog pDialog;
+
+    //private static String url = "http://localhost:8000/users";
+    //private static String urlt = "http://localhost:8000/teachers";
+
     EditText TFname, TFemail, TFuname, TFpass1, TFpass2, edidrelease;
     Button SignUp;
     Spinner spinner;
-    private int userType, userrelease=0, idteacher=0;
-    boolean spinnerUserType=false;
-    ArrayList<HashMap<String, String>> studentsList;
-    private ArrayList<User> teachersList;
-    HashMap<String, String> teclist;
-    //private ArrayList<User> teachersList;
-
-    private static final String TAG_USERS = "users";
-    private static final String TAG_ID = "id";
-    private static final String TAG_NAME = "name";
-    private static final String TAG_EMAIL = "email";
-    private static final String TAG_UNAME = "uname";
-    private static final String TAG_PASS = "password";
-    private static final String TAG_USERTYPE = "usertype";
-    private static final String TAG_IDRELEASE  = "release_id";
-    private static final String TAG_IDTEACHER = "teacher_id";
 
     String unameTeacher;
     String namestr;
@@ -75,11 +61,31 @@ public class SignUp extends Activity {
     String userTypestr;
     String userreleasestr;
     String idteacherstr;
-    JSONArray users = null;
-    private int idt;
-    private String nome;
-    int selectedItem;
     String temp;
+    private String nome;
+
+    private int idt;
+    int selectedItem;
+    private int userType, userrelease=0, idteacher=0;
+
+    boolean spinnerUserType=false;
+
+    private static final String TAG_USERS = "users";
+    private static final String TAG_ID = "id";
+    private static final String TAG_NAME = "name";
+    private static final String TAG_EMAIL = "email";
+    private static final String TAG_UNAME = "uname";
+    private static final String TAG_PASS = "password";
+    private static final String TAG_USERTYPE = "usertype";
+    private static final String TAG_IDRELEASE  = "release_id";
+    private static final String TAG_IDTEACHER = "teacher_id";
+    private static String url = "http://conectguitarws-conectguitar.rhcloud.com/users";
+    private static String urlt = "http://conectguitarws-conectguitar.rhcloud.com/teachers";
+
+    JSONArray users = null;
+    ArrayList<HashMap<String, String>> studentsList;
+    private ArrayList<User> teachersList;
+    HashMap<String, String> teclist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +95,7 @@ public class SignUp extends Activity {
         CheckBox teacher = (CheckBox)findViewById(R.id.chkTeacher);
         spinner=(Spinner)findViewById(R.id.spinner);
         teachersList = new ArrayList<User>();
-        //helper.getAllTeachers();
+
         new GetTeachers().execute();
 
     }
@@ -98,7 +104,6 @@ public class SignUp extends Activity {
 
         if (v.getId() == R.id.Bsignupbutton)
         {
-
 
             EditText name = (EditText)findViewById(R.id.TFname);
             EditText email = (EditText)findViewById(R.id.TFemail);
@@ -141,8 +146,9 @@ public class SignUp extends Activity {
                     idteacherstr = String.valueOf(idteacher);
 
                     new HttpAsyncTask().execute("http://conectguitarws-conectguitar.rhcloud.com/users");
+                    //new HttpAsyncTask().execute("http://localhost:8000/users");
 
-                    Toast salvo = Toast.makeText(SignUp.this, "Welcome " + namestr + "! SQLITE FUnfou" , Toast.LENGTH_SHORT);
+                    Toast salvo = Toast.makeText(SignUp.this, "Welcome " + namestr + "!" , Toast.LENGTH_SHORT);
                     salvo.show();
 
 
