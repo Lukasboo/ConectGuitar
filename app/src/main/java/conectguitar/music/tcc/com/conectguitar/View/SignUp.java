@@ -145,8 +145,8 @@ public class SignUp extends Activity {
                     userreleasestr = String.valueOf(userrelease);
                     idteacherstr = String.valueOf(idteacher);
 
-                    new HttpAsyncTask().execute("http://conectguitarws-conectguitar.rhcloud.com/users");
-                    //new HttpAsyncTask().execute("http://localhost:8000/users");
+                    new InsertUserAsyncTask().execute("http://conectguitarws-conectguitar.rhcloud.com/users");
+                    //new InsertUserAsyncTask().execute("http://localhost:8000/users");
 
                     Toast salvo = Toast.makeText(SignUp.this, "Welcome " + namestr + "!" , Toast.LENGTH_SHORT);
                     salvo.show();
@@ -253,7 +253,7 @@ public class SignUp extends Activity {
         return result;
     }
 
-    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+    private class InsertUserAsyncTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
 

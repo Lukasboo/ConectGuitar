@@ -48,7 +48,15 @@ import conectguitar.music.tcc.com.conectguitar.R;
  */
 public class Display extends Activity {
 
+
+    DatabaseHelper helper = new DatabaseHelper(this);
+
+    TextView students_Id, students_Name, students_Lesson, students_Filename, students_NStage, students_NLesson, students_ID;
+
+    Button btnStudents;
+    Button btnMedia;
     private ProgressDialog pDialog;
+    ListView lv;
 
     private static final String TAG_USERS = "users";
     private static final String TAG_ID = "id";
@@ -58,27 +66,11 @@ public class Display extends Activity {
     private static final String TAG_STUDENT_ID = "student_id";
     private static final String TAG_STAGE = "stage";
     private static final String TAG_LESSON = "lesson";
-
-
-    TextView students_Id, students_Name, students_Lesson, students_Filename, students_NStage, students_NLesson, students_ID;
-
-    DatabaseHelper helper = new DatabaseHelper(this);
-
     private static String downloadFilePath;
     private static String file_url = "http://conectguitarws-conectguitar.rhcloud.com/audiosconectguitar/";
-
     private int idteacher=0;
     private int studentsIdRelease=0;
     private static String url = "http://conectguitarws-conectguitar.rhcloud.com/fileentry/avaliation/";
-    //private static String url = "http://localhost:8000/fileentry/avaliation/";
-    // users JSONArray
-    JSONArray users = null;
-    // Hashmap for ListView
-    ArrayList<HashMap<String, String>> studentsList;
-    ListView lv;
-
-    Button btnStudents;
-    Button btnMedia;
     int id;
     int usertype=0;
     int idrelease=0;
@@ -91,8 +83,16 @@ public class Display extends Activity {
     String filename;
     String stage;
     String lesson;
-
     private int forinit=0, forend=0;
+    //private static String url = "http://localhost:8000/fileentry/avaliation/";
+    // users JSONArray
+    JSONArray users = null;
+    // Hashmap for ListView
+    ArrayList<HashMap<String, String>> studentsList;
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -459,7 +459,7 @@ public class Display extends Activity {
             if (pDialog.isShowing())
                 pDialog.dismiss();
 
-            new HttpAsyncTask().execute("http://conectguitarws-conectguitar.rhcloud.com/fileentry/" + audio_id);
+            new AvaliatedAsyncTask().execute("http://conectguitarws-conectguitar.rhcloud.com/fileentry/" + audio_id);
 
             //helper.insertAudioData(filename, original_filename, stage, lesson, students_id);
 
@@ -475,7 +475,7 @@ public class Display extends Activity {
     }
 
     //avaliation
-    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+    private class AvaliatedAsyncTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected void onPreExecute() {

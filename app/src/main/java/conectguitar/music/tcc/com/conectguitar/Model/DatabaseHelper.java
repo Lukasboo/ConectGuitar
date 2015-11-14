@@ -18,13 +18,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "ConectGuitar.db";
 
     private static final String TABLE_NAME = "release";
-    private static final String COLUMN_DESCRIPTION = "description";
-    private static final String COLUMN_STATUS = "status";
+    //private static final String COLUMN_DESCRIPTION = "description";
+    //private static final String COLUMN_STATUS = "status";
     private static final String TABLE_CREATE = "create table release (id integer primary key not null , " +
             " description text not null, status integer not null );";
 
     private static final String TABLE_NAME2 = "audiosconectguitar";
-    public static final String COLUMN_ID = "id";
+    //public static final String COLUMN_ID = "id";
     public static final String COLUMN_STUDENT_ID = "student_id";
     public static final String COLUMN_STAGE = "stage";
     public static final String COLUMN_LESSON = "lesson";

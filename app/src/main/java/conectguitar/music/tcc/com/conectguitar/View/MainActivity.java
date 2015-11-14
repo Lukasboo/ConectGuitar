@@ -42,16 +42,21 @@ public class MainActivity extends Activity {
     private static final String TAG_USERTYPE= "usertype";
 
     ArrayList<HashMap<String, String>> studentsList;
-    JSONArray users = null;
-    User user;
+
+
     DatabaseHelper helper = new DatabaseHelper(this);
     public int idrelease=2, idteacher=0;
     public String username;
     String emailstr;
     String passwordstr;
     static String validation;
-    private ProgressDialog pDialog;
+
     static String response = null;
+
+
+    User user;
+    private ProgressDialog pDialog;
+    JSONArray users = null;
     Intent intent;
 
     @Override
@@ -74,8 +79,8 @@ public class MainActivity extends Activity {
             EditText b = (EditText) findViewById(R.id.TFpassword);
             passwordstr = b.getText().toString();
 
-            new HttpAsyncTask().execute("http://conectguitarws-conectguitar.rhcloud.com/users/login");
-            //new HttpAsyncTask().execute("http://localhost:8000/users/login");
+            new UserValidateAsyncTask().execute("http://conectguitarws-conectguitar.rhcloud.com/users/login");
+            //new UserValidateAsyncTask().execute("http://localhost:8000/users/login");
 
         }
 
@@ -150,7 +155,7 @@ public class MainActivity extends Activity {
 
     }
 
-    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+    private class UserValidateAsyncTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected void onPreExecute() {

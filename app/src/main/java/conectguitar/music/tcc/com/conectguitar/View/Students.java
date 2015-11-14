@@ -30,6 +30,7 @@ import conectguitar.music.tcc.com.conectguitar.R;
 public class Students extends Activity {
 
     private ProgressDialog pDialog;
+    TextView students_Id, students_Name, students_IdRelease;
 
     private static final String TAG_USERS = "users";
     private static final String TAG_ID = "id";
@@ -37,7 +38,7 @@ public class Students extends Activity {
     private static final String TAG_IDRELEASE = "release_id";
 
 
-    TextView students_Id, students_Name, students_IdRelease;
+
     private int idteacher=0;
     private int studentsIdRelease=0;
     int id;
@@ -62,7 +63,7 @@ public class Students extends Activity {
         idteacher = intent.getIntExtra("idteacher", 0);
         id = intent.getIntExtra("id", 0);
         lv = (ListView) findViewById(R.id.list);
-        new GetContacts().execute();
+        new GetStudents().execute();
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -83,7 +84,7 @@ public class Students extends Activity {
 
     }
 
-    private class GetContacts extends AsyncTask<Void, Void, Void> {
+    private class GetStudents extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {

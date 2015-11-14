@@ -170,7 +170,7 @@ public class StudentsRelease extends Activity {
                 stage = lessons_nstage.getText().toString();
                 lesson = lessons_nLesson.getText().toString();
                 //new DownloadFileFromURL().execute(file_url);
-                //new HttpAsyncTask().execute(file_url + lessons_filename);
+                //new NewReleaseAsyncTask().execute(file_url + lessons_filename);
                 //new DownloadFile().execute(file_url + filename);
 
                 //helper.insertAudioData(filename, original_filename, stage, lesson, student_id);
@@ -204,11 +204,11 @@ public class StudentsRelease extends Activity {
         c.setId(students_Id);
         c.setIdRelease(newIdRelease);
 
-        new HttpAsyncTask().execute("http://conectguitarws-conectguitar.rhcloud.com/users/" + students_Id);
+        new NewReleaseAsyncTask().execute("http://conectguitarws-conectguitar.rhcloud.com/users/" + students_Id);
 
     }
 
-    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+    private class NewReleaseAsyncTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected void onPreExecute() {

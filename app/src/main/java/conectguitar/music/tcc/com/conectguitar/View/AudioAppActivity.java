@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,23 +27,16 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import conectguitar.music.tcc.com.conectguitar.R;
@@ -62,6 +56,7 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
     CheckBox chkRecord, chkListen;
     ImageButton btnInterrogation;
     Button btnSendAudio;
+
     private static ImageButton stopButton;
     private static ImageButton playButton;
     private static ImageButton recordButton;
@@ -124,7 +119,7 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
         btnSendAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new HttpAsyncTask().execute();
+                new SendAudioAsyncTask().execute();
             }
         });
 
@@ -176,7 +171,7 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
     }
 
     //SEND AUDIO, FUNCIONA MAS PROVAVELMENTE CORROMPE O AUDIO
-    /*private class HttpAsyncTask extends AsyncTask<Void, Void, Void> {
+    private class SendAudioAsyncTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -296,7 +291,7 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
 
         }
 
-    }*/
+    }
 
     
 
