@@ -3,6 +3,7 @@ package conectguitar.music.tcc.com.conectguitar.View;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -49,6 +51,7 @@ public class SignUp extends Activity {
     //private static String urlt = "http://localhost:8000/teachers";
 
     EditText TFname, TFemail, TFuname, TFpass1, TFpass2, edidrelease;
+    TextView txt1, txt2, txt3, txt4, txt5;
     Button SignUp;
     Spinner spinner;
 
@@ -87,6 +90,13 @@ public class SignUp extends Activity {
     private ArrayList<User> teachersList;
     HashMap<String, String> teclist;
 
+    EditText name;
+    EditText email;
+    EditText uname;
+    EditText pass1;
+    EditText pass2;
+    //Button SignUp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +105,36 @@ public class SignUp extends Activity {
         CheckBox teacher = (CheckBox)findViewById(R.id.chkTeacher);
         spinner=(Spinner)findViewById(R.id.spinner);
         teachersList = new ArrayList<User>();
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Melody MakerNotesOnly.ttf");
 
+        name = (EditText)findViewById(R.id.TFname);
+        email = (EditText)findViewById(R.id.TFemail);
+        uname = (EditText)findViewById(R.id.TFuname);
+        pass1 = (EditText)findViewById(R.id.TFpass1);
+        pass2 = (EditText)findViewById(R.id.TFpass2);
+        SignUp = (Button)findViewById(R.id.Bsignupbutton);
+
+        txt1 = (TextView)findViewById(R.id.txt1);
+        txt2 = (TextView)findViewById(R.id.txt2);
+        txt3 = (TextView)findViewById(R.id.txt3);
+        txt4 = (TextView)findViewById(R.id.txt4);
+        txt5 = (TextView)findViewById(R.id.txt5);
+
+        //SignUp = (Button)findViewById(R.id.BSignup);
+
+        name.setTypeface(custom_font);
+        email.setTypeface(custom_font);
+        uname.setTypeface(custom_font);
+        pass1.setTypeface(custom_font);
+        pass2.setTypeface(custom_font);
+        txt1.setTypeface(custom_font);
+        txt2.setTypeface(custom_font);
+        txt3.setTypeface(custom_font);
+        txt4.setTypeface(custom_font);
+        txt5.setTypeface(custom_font);
+        teacher.setTypeface(custom_font);
+        SignUp.setTypeface(custom_font);
+        //sspinner.setTypeface(custom_font);
         new GetTeachers().execute();
 
     }
@@ -105,11 +144,17 @@ public class SignUp extends Activity {
         if (v.getId() == R.id.Bsignupbutton)
         {
 
-            EditText name = (EditText)findViewById(R.id.TFname);
+            /*EditText name = (EditText)findViewById(R.id.TFname);
             EditText email = (EditText)findViewById(R.id.TFemail);
             EditText uname = (EditText)findViewById(R.id.TFuname);
             EditText pass1 = (EditText)findViewById(R.id.TFpass1);
-            EditText pass2 = (EditText)findViewById(R.id.TFpass2);
+            EditText pass2 = (EditText)findViewById(R.id.TFpass2);*/
+
+            /*EditText name = (EditText)findViewById(R.id.TFname);
+            EditText email = (EditText)findViewById(R.id.TFemail);
+            EditText uname = (EditText)findViewById(R.id.TFuname);
+            EditText pass1 = (EditText)findViewById(R.id.TFpass1);
+            EditText pass2 = (EditText)findViewById(R.id.TFpass2);*/
 
             namestr = name.getText().toString();
             emailstr = email.getText().toString();

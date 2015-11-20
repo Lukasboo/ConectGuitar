@@ -9,14 +9,13 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -62,7 +61,7 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
     private static ImageButton recordButton;
     private ProgressDialog pDialog;
     private SeekBar seekbar;
-    public TextView songName, duration;
+    public TextView songName, duration, txt1;
 
 
     int serverResponseCode = 0;
@@ -83,10 +82,12 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_audio_app);
 
 
-        if (Build.VERSION.SDK_INT > 9) {
+        /*if (Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
-        }
+        }*/
+
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Melody MakerNotesOnly.ttf");
 
         username = null;
         nLesson = 0;
@@ -103,6 +104,7 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
         nLesson = globalVar.getInt("nLesson", 0);
         username = globalVar.getString("name", null);*/
 
+        txt1 = (TextView)findViewById(R.id.txt1);
         edLesson = (EditText)findViewById(R.id.edLesson);
         edStudent = (EditText)findViewById(R.id.edStudent);
         btnSendAudio = (Button)findViewById(R.id.btnSendAudio);
@@ -114,12 +116,18 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
         chkListen = (CheckBox)findViewById(R.id.chkListen);
         btnInterrogation = (ImageButton)findViewById(R.id.btnInterrogation);
 
-
+        txt1.setTypeface(custom_font);
+        edLesson.setTypeface(custom_font);
+        edStudent.setTypeface(custom_font);
+        btnSendAudio.setTypeface(custom_font);
+        chkRecord.setTypeface(custom_font);
+        chkListen.setTypeface(custom_font);
 
         btnSendAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new SendAudioAsyncTask().execute();
+                //new doFileUpload();
             }
         });
 
@@ -190,6 +198,7 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
 
             String upLoadServerUri = "http://conectguitarws-conectguitar.rhcloud.com/fileentry/add/" + student_id + "/" + nstage + "/" + nLesson ;
             //String upLoadServerUri = "http://http://localhost:8000/conectguitarws/fileentry/add/" + student_id + "/" + nstage + "/" + nLesson ;
+            //String upLoadServerUri = "http://http://localhost:8000/fileentry/add/" + student_id + "/" + nstage + "/" + nLesson ;
             String fileName = audioFilePath;
             HttpURLConnection conn = null;
             DataOutputStream dos = null;
@@ -292,6 +301,217 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
         }
 
     }
+
+    /*private class SendAudioAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Showing progress dialog
+            pDialog = new ProgressDialog(AudioAppActivity.this);
+            pDialog.setMessage("Uploading Audio...Wait for it...");
+            pDialog.setCancelable(false);
+            pDialog.show();
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+        HttpURLConnection conn = null;
+        DataOutputStream dos = null;
+        DataInputStream inStream = null;
+        //String existingFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mypic.png";
+        String existingFileName = audioFilePath;
+
+        String lineEnd = "\r\n";
+        String twoHyphens = "--";
+        String boundary = "*****";
+        int bytesRead, bytesAvailable, bufferSize;
+        byte[] buffer;
+        int maxBufferSize = 1 * 1024 * 1024;
+        String responseFromServer = "";
+        //String urlString = "http://mywebsite.com/directory/upload.php";
+        String urlString = "http://conectguitarws-conectguitar.rhcloud.com/fileentry/add/" + student_id + "/" + nstage + "/" + nLesson ;
+
+        try {
+
+            //------------------ CLIENT REQUEST
+            FileInputStream fileInputStream = new FileInputStream(new File(existingFileName));
+            // open a URL connection to the Servlet
+            URL url = new URL(urlString);
+            // Open a HTTP connection to the URL
+            conn = (HttpURLConnection) url.openConnection();
+            // Allow Inputs
+            conn.setDoInput(true);
+            // Allow Outputs
+            conn.setDoOutput(true);
+            // Don't use a cached copy.
+            conn.setUseCaches(false);
+            // Use a post method.
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+            conn.setRequestProperty("filefield", existingFileName);
+            dos = new DataOutputStream(conn.getOutputStream());
+            dos.writeBytes(twoHyphens + boundary + lineEnd);
+            dos.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + existingFileName + "\"" + lineEnd);
+            dos.writeBytes(lineEnd);
+            // create a buffer of maximum size
+            bytesAvailable = fileInputStream.available();
+            bufferSize = Math.min(bytesAvailable, maxBufferSize);
+            buffer = new byte[bufferSize];
+            // read file and write it into form...
+            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+            while (bytesRead > 0) {
+
+                dos.write(buffer, 0, bufferSize);
+                bytesAvailable = fileInputStream.available();
+                bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+            }
+
+            // send multipart form data necesssary after file data...
+            dos.writeBytes(lineEnd);
+            dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+            // close streams
+            Log.e("Debug", "File is written");
+            fileInputStream.close();
+            dos.flush();
+            dos.close();
+
+        } catch (MalformedURLException ex) {
+            Log.e("Debug", "error: " + ex.getMessage(), ex);
+        } catch (IOException ioe) {
+            Log.e("Debug", "error: " + ioe.getMessage(), ioe);
+        }
+
+        //------------------ read the SERVER RESPONSE
+        try {
+
+            inStream = new DataInputStream(conn.getInputStream());
+            String str;
+
+            while ((str = inStream.readLine()) != null) {
+
+                Log.e("Debug", "Server Response " + str);
+
+            }
+
+            inStream.close();
+
+        } catch (IOException ioex) {
+            Log.e("Debug", "error: " + ioex.getMessage(), ioex);
+
+
+
+        }
+            return null;
+        }
+
+
+        protected void onPostExecute(Void serverResponseCode) {
+
+            if (pDialog.isShowing())
+                pDialog.dismiss();
+
+            Toast.makeText(getBaseContext(), "Dados enviados com sucesso!", Toast.LENGTH_LONG).show();
+
+        }
+
+    }*/
+
+    /*private void doFileUpload() {
+
+        HttpURLConnection conn = null;
+        DataOutputStream dos = null;
+        DataInputStream inStream = null;
+        //String existingFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mypic.png";
+        String existingFileName = audioFilePath;
+
+        String lineEnd = "\r\n";
+        String twoHyphens = "--";
+        String boundary = "*****";
+        int bytesRead, bytesAvailable, bufferSize;
+        byte[] buffer;
+        int maxBufferSize = 1 * 1024 * 1024;
+        String responseFromServer = "";
+        //String urlString = "http://mywebsite.com/directory/upload.php";
+        String urlString = "http://conectguitarws-conectguitar.rhcloud.com/fileentry/add/" + student_id + "/" + nstage + "/" + nLesson ;
+
+        try {
+
+            //------------------ CLIENT REQUEST
+            FileInputStream fileInputStream = new FileInputStream(new File(existingFileName));
+            // open a URL connection to the Servlet
+            URL url = new URL(urlString);
+            // Open a HTTP connection to the URL
+            conn = (HttpURLConnection) url.openConnection();
+            // Allow Inputs
+            conn.setDoInput(true);
+            // Allow Outputs
+            conn.setDoOutput(true);
+            // Don't use a cached copy.
+            conn.setUseCaches(false);
+            // Use a post method.
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+            dos = new DataOutputStream(conn.getOutputStream());
+            dos.writeBytes(twoHyphens + boundary + lineEnd);
+            dos.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + existingFileName + "\"" + lineEnd);
+            dos.writeBytes(lineEnd);
+            // create a buffer of maximum size
+            bytesAvailable = fileInputStream.available();
+            bufferSize = Math.min(bytesAvailable, maxBufferSize);
+            buffer = new byte[bufferSize];
+            // read file and write it into form...
+            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+            while (bytesRead > 0) {
+
+                dos.write(buffer, 0, bufferSize);
+                bytesAvailable = fileInputStream.available();
+                bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+            }
+
+            // send multipart form data necesssary after file data...
+            dos.writeBytes(lineEnd);
+            dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+            // close streams
+            Log.e("Debug", "File is written");
+            fileInputStream.close();
+            dos.flush();
+            dos.close();
+
+        } catch (MalformedURLException ex) {
+            Log.e("Debug", "error: " + ex.getMessage(), ex);
+        } catch (IOException ioe) {
+            Log.e("Debug", "error: " + ioe.getMessage(), ioe);
+        }
+
+        //------------------ read the SERVER RESPONSE
+        try {
+
+            inStream = new DataInputStream(conn.getInputStream());
+            String str;
+
+            while ((str = inStream.readLine()) != null) {
+
+                Log.e("Debug", "Server Response " + str);
+
+            }
+
+            inStream.close();
+
+        } catch (IOException ioex) {
+            Log.e("Debug", "error: " + ioex.getMessage(), ioex);
+        }
+    }*/
 
     
 

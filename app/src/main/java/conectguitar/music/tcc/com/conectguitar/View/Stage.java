@@ -3,6 +3,7 @@ package conectguitar.music.tcc.com.conectguitar.View;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +33,8 @@ public class Stage extends Activity implements View.OnClickListener  {
         usertype = intent.getIntExtra("usertype", 0);
         idrelease = intent.getIntExtra("idrelease", 0);
         name = intent.getStringExtra("name");
+
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Melody MakerNotesOnly.ttf");
 
         /*SharedPreferences globalVar = getSharedPreferences("globalVariables", MODE_PRIVATE);
         usertype = globalVar.getInt("usertype", 0);
@@ -79,6 +82,12 @@ public class Stage extends Activity implements View.OnClickListener  {
         } else {
             btnStage5.setEnabled(true);
         }
+
+        btnStage1.setTypeface(custom_font);
+        btnStage2.setTypeface(custom_font);
+        btnStage3.setTypeface(custom_font);
+        btnStage4.setTypeface(custom_font);
+        btnStage5.setTypeface(custom_font);
 
     }
 

@@ -3,10 +3,14 @@ package conectguitar.music.tcc.com.conectguitar.View;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -59,14 +63,53 @@ public class MainActivity extends Activity {
     JSONArray users = null;
     Intent intent;
 
+    Button BSignup;
+    Button BLogin;
+    EditText a;
+    EditText b;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Melody MakerNotesOnly.ttf");
+
+        BSignup = (Button)findViewById(R.id.BSignup);
+        BLogin = (Button)findViewById(R.id.BLogin);
+
+        a = (EditText) findViewById(R.id.TFusername);
+        b = (EditText) findViewById(R.id.TFpassword);
+
+        BSignup.setTypeface(custom_font);
+        BLogin.setTypeface(custom_font);
+        a.setTypeface(custom_font);
+        b.setTypeface(custom_font);
+
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_users, menu);
+        return true;
+    }
+
+    /*@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.item1:
+                //UpdateUser();
+                return true;
+            case R.id.item2:
+                //DeleteUser();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }*/
 
     public void onButtonClick(View v){
 
@@ -74,9 +117,9 @@ public class MainActivity extends Activity {
 
         {
 
-            EditText a = (EditText) findViewById(R.id.TFusername);
+            //EditText a = (EditText) findViewById(R.id.TFusername);
             emailstr = a.getText().toString();
-            EditText b = (EditText) findViewById(R.id.TFpassword);
+            //EditText b = (EditText) findViewById(R.id.TFpassword);
             passwordstr = b.getText().toString();
 
             new UserValidateAsyncTask().execute("http://conectguitarws-conectguitar.rhcloud.com/users/login");

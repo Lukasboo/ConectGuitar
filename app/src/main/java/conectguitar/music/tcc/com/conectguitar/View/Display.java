@@ -1,13 +1,18 @@
 package conectguitar.music.tcc.com.conectguitar.View;
 
 
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -34,6 +39,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -46,7 +53,7 @@ import conectguitar.music.tcc.com.conectguitar.R;
 /**
  * Created by lucas on 06/10/15.
  */
-public class Display extends Activity {
+public class Display extends AppCompatActivity {
 
 
     DatabaseHelper helper = new DatabaseHelper(this);
@@ -90,9 +97,7 @@ public class Display extends Activity {
     // Hashmap for ListView
     ArrayList<HashMap<String, String>> studentsList;
 
-
-
-
+    TextView txt1, txt2, txt3, txt4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +106,9 @@ public class Display extends Activity {
         //int idteacher=0;
         /*SharedPreferences globalVar = getSharedPreferences("globalVariables", MODE_PRIVATE);
         idteacher = globalVar.getInt("idteacher", 0);*/
+
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Melody MakerNotesOnly.ttf");
+
         Intent intent = getIntent();
         usertype = 0;
         idteacher = intent.getIntExtra("idteacher", 0);
@@ -114,6 +122,23 @@ public class Display extends Activity {
 
         btnStudents = (Button)findViewById(R.id.btnStudents);
         btnMedia = (Button)findViewById(R.id.btnMedia);
+        txt1 = (TextView)findViewById(R.id.txt1);
+        txt2 = (TextView)findViewById(R.id.txt2);
+        txt3 = (TextView)findViewById(R.id.txt3);
+        txt4 = (TextView)findViewById(R.id.txt4);
+        btnStudents.setTypeface(custom_font);
+        btnMedia.setTypeface(custom_font);
+        txt1.setTypeface(custom_font);
+        txt2.setTypeface(custom_font);
+        txt3.setTypeface(custom_font);
+        txt4.setTypeface(custom_font);
+        /*students_Id.setTypeface(custom_font);
+        students_Name.setTypeface(custom_font);
+        students_Lesson.setTypeface(custom_font);
+        students_Filename.setTypeface(custom_font);
+        students_NStage.setTypeface(custom_font);
+        students_NLesson.setTypeface(custom_font);
+        students_ID.setTypeface(custom_font);*/
 
         /*SharedPreferences globalVar = getSharedPreferences("globalVariables", MODE_PRIVATE);
 
@@ -166,7 +191,79 @@ public class Display extends Activity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        Intent intent;
+
+        switch (item.getItemId()) {
+            case R.id.item1:
+
+                intent = new Intent(Display.this, UpdateUser.class);
+                intent.putExtra("student_id", student_id);
+                startActivity(intent);
+
+            case R.id.item2:
+
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Display.this);
+
+
+
+                alertDialogBuilder.setTitle(this.getTitle() + " decision");
+
+                alertDialogBuilder.setMessage("Deseja realmente deletar a conta?");
+
+                // set positive button: Yes message
+
+                alertDialogBuilder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        new DeleteUserAsyncTask().execute("http://conectguitarws-conectguitar.rhcloud.com/users/" + student_id);
+
+                        Intent i = new Intent(Display.this, MainActivity.class);
+                        startActivity(i);
+
+
+                    }
+
+                });
+
+                alertDialogBuilder.setNegativeButton("Não",new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        Toast.makeText(getApplicationContext(),"Cancelado!",Toast.LENGTH_LONG).show();
+
+                    }
+
+                });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                // show alert
+                alertDialog.show();
+
+                return true;
+
+            case R.id.item3:
+
+                intent = new Intent(Display.this, UpdatePassword.class);
+                intent.putExtra("student_id", student_id);
+                startActivity(intent);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     public File getAlbumStorageDownloadDir(String albumName) {
 
@@ -560,6 +657,61 @@ public class Display extends Activity {
 
     }
 
+    private class DeleteUserAsyncTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Showing progress dialog
+            pDialog = new ProgressDialog(Display.this);
+            pDialog.setMessage("Please wait...");
+            pDialog.setCancelable(false);
+            pDialog.show();
+
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+
+            URL url = null;
+            try {
+                url = new URL("http://conectguitarws-conectguitar.rhcloud.com/users/" + student_id);
+            } catch (MalformedURLException exception) {
+                exception.printStackTrace();
+            }
+            HttpURLConnection httpURLConnection = null;
+            try {
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestProperty("Content-Type",
+                        "application/x-www-form-urlencoded");
+                httpURLConnection.setRequestMethod("DELETE");
+                System.out.println(httpURLConnection.getResponseCode());
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            } finally {
+                if (httpURLConnection != null) {
+                    httpURLConnection.disconnect();
+                }
+            }
+
+            return null;
+
+        }
+
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+
+            if (pDialog.isShowing())
+                pDialog.dismiss();
+
+            //if(result.equals("EXITO!")) {
+                Toast.makeText(getBaseContext(), "Usuário deletado com sucesso!", Toast.LENGTH_LONG).show();
+            //} else {
+            //    Toast.makeText(getBaseContext(), "Erro ao deletar usuário!", Toast.LENGTH_LONG).show();
+            //}
+        }
+    }
 
     /*private class DownloadFile extends AsyncTask<String, String, String> {
 
@@ -660,92 +812,4 @@ public class Display extends Activity {
 
 
 
-
-
-
-
-/*package conectguitar.music.tcc.com.conectguitar.View;
-
-
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-
-import conectguitar.music.tcc.com.conectguitar.R;
-
-/**
- * Created by lucas on 06/10/15.
- */
-/*public class Display extends Activity {
-
-    ImageButton btMedia;
-    Button btnStudents;
-    int id;
-    int idteacher=0;
-    int usertype=0;
-    int idrelease=0;
-    int student_id=0;
-    String name;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.display);
-
-        btnStudents = (Button)findViewById(R.id.btnStudents);
-
-        /*SharedPreferences globalVar = getSharedPreferences("globalVariables", MODE_PRIVATE);
-
-        usertype = globalVar.getInt("usertype", 0);
-        idteacher = globalVar.getInt("idteacher", 0);*/
-
-
-
-        /*usertype = 0;
-        Intent intent = getIntent();
-        id = intent.getIntExtra("id", 0);
-        student_id = intent.getIntExtra("student_id", 0);
-        usertype = intent.getIntExtra("usertype", 0);
-        idrelease = intent.getIntExtra("idrelease", 0);
-        idteacher = intent.getIntExtra("idteacher", 0);
-        name = intent.getStringExtra("name");
-
-        /*if(usertype==1) {
-            btnStudents.setEnabled(true);
-        } else {
-            btnStudents.setEnabled(false);
-        }*/
-
-
-    /*}
-
-    public void onButtonClick(View v){
-
-        if(v.getId()==R.id.btMedia) {
-            Intent i = new Intent(Display.this, Stage.class);
-            i.putExtra("id", id);
-            i.putExtra("student_id", student_id);
-            i.putExtra("usertype", usertype);
-            i.putExtra("idrelease", idrelease);
-            i.putExtra("name", name);
-            i.putExtra("idteacher", idteacher);
-            startActivity(i);
-        }
-
-        if(v.getId()==R.id.btnStudents) {
-            Intent i = new Intent(Display.this, Students.class);
-            i.putExtra("usertype", usertype);
-            i.putExtra("idrelease", idrelease);
-            i.putExtra("name", name);
-            i.putExtra("idteacher", idteacher);
-            i.putExtra("id", id);
-            startActivity(i);
-        }
-
-    }
-
-}*/
 

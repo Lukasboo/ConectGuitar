@@ -7,17 +7,44 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     android:background="#D8D8D8"
-    android:id="@+id/signuplayout">
+    android:id="@+id/updatelayout">
     >
 
     <TextView
-        android:id="@+id/txt1"
+        android:text="Dados Atuais:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/txtName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/txtEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/txtUname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:text="Insira os Novos Dados"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/name"
         android:textColor="#2E2E2E"
         android:textStyle="bold"
         />
+
+
 
     <EditText
         android:layout_width="match_parent"
@@ -26,7 +53,6 @@
         />
 
     <TextView
-        android:id="@+id/txt2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/email"
@@ -41,7 +67,6 @@
         />
 
     <TextView
-        android:id="@+id/txt3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/user"
@@ -55,67 +80,19 @@
         android:id="@+id/TFuname"
         />
 
-    <TextView
-        android:id="@+id/txt4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/password"
-        android:textColor="#2E2E2E"
-        android:textStyle="bold"
-        />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/TFpass1"
-        android:inputType="textPassword"
-        />
-
-    <TextView
-        android:id="@+id/txt5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/rpassword"
-        android:textColor="#2E2E2E"
-        android:textStyle="bold"
-        />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/TFpass2"
-        android:inputType="textPassword"
-        />
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <CheckBox android:id="@+id/chkTeacher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#2E2E2E"
-            android:text="@string/teacher"
-            android:onClick="onCheckboxClicked"/>
-
     </LinearLayout>
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#D8D8D8"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="7dp"
-        />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/Bsignupbutton"
+        android:id="@+id/BUpdatebutton"
         android:text="@string/save"
         android:textAlignment="center"
-        android:onClick="onSignUpClick"
+        android:onClick="onUpdateUserClick"
         android:layout_marginTop="15dp"
         />
 

@@ -53,6 +53,14 @@
             android:name=".View.StudentsRelease"
             android:label="ProjetoLogin1">
         </activity>
+        <activity
+            android:name=".View.UpdateUser"
+            android:label="ProjetoLogin1">
+        </activity>
+        <activity
+            android:name=".View.UpdatePassword"
+            android:label="ProjetoLogin1">
+        </activity>
     </application>
 
 </manifest>
