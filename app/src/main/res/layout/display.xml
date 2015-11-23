@@ -11,7 +11,7 @@
     android:background="#D8D8D8"
     tools:context=".Display">
 
-    <TextView
+    <!-- <TextView
         android:id="@+id/txt1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,8 +42,25 @@
         android:textColor="#2E2E2E"
         android:textStyle="italic"
         android:typeface="sans"
-        android:textSize="20dp"
+        android:textSize="20dp" -->
         />
+
+    <ImageButton
+        android:id="@+id/guitarrista5"
+        android:src="@drawable/guitarrista5"
+        android:onClick="solo1"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+
+    <ImageButton
+        android:id="@+id/btnInterrogation"
+        android:textStyle="bold"
+        android:layout_marginLeft="10dp"
+        android:layout_width="23dp"
+        android:layout_height="23dp"
+        android:src="@drawable/interrogation"
+        android:onClick="Interrogation"/>
+
 
     <Button
         android:id="@+id/btnStudents"

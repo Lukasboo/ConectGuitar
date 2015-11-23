@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -13,8 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".View.MainActivity"
-            android:label="@string/app_name"
+            android:name=".View.SplashScreen"
+            android:label="@string/title_activity_splash_screen"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,43 +23,61 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".View.SignUp"
+            android:name=".View.MainActivity"
             android:label="@string/app_name"
-            >
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".View.SignUp"
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".View.Display"
-            android:label="@string/app_name">
-
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".View.AudioAppActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".View.Stage"
-            android:label="ProjetoLogin1">
+            android:label="ProjetoLogin1" >
         </activity>
         <activity
             android:name=".View.Lesson"
-            android:label="ProjetoLogin1">
+            android:label="ProjetoLogin1" >
         </activity>
         <activity
             android:name=".View.Students"
-            android:label="ProjetoLogin1">
+            android:label="ProjetoLogin1" >
         </activity>
         <activity
             android:name=".View.StudentsRelease"
-            android:label="ProjetoLogin1">
+            android:label="ProjetoLogin1" >
         </activity>
         <activity
             android:name=".View.UpdateUser"
-            android:label="ProjetoLogin1">
+            android:label="ProjetoLogin1" >
         </activity>
         <activity
             android:name=".View.UpdatePassword"
-            android:label="ProjetoLogin1">
+            android:label="ProjetoLogin1" >
+        </activity>
+        <activity
+            android:name=".View.AudioTeacherActivity"
+            android:label="ProjetoLogin1" >
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".View.StudentsFeedback"
+            android:label="ProjetoLogin1" >
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".View.SplashScreen2"
+            android:label="@string/title_activity_splash_screen2"
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>
 

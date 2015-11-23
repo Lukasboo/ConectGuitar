@@ -4,6 +4,7 @@ package conectguitar.music.tcc.com.conectguitar.View;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -59,6 +60,9 @@ public class Students extends Activity {
         //int idteacher=0;
         /*SharedPreferences globalVar = getSharedPreferences("globalVariables", MODE_PRIVATE);
         idteacher = globalVar.getInt("idteacher", 0);*/
+
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Wolfganger.otf");
+
         Intent intent = getIntent();
         idteacher = intent.getIntExtra("idteacher", 0);
         id = intent.getIntExtra("id", 0);
@@ -83,6 +87,8 @@ public class Students extends Activity {
         });
 
     }
+
+
 
     private class GetStudents extends AsyncTask<Void, Void, Void> {
 

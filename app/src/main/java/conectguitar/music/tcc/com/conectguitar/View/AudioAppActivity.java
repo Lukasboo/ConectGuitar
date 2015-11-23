@@ -5,7 +5,9 @@ package conectguitar.music.tcc.com.conectguitar.View;
  */
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
@@ -26,6 +28,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,7 +37,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
@@ -87,7 +89,8 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
             StrictMode.setThreadPolicy(policy);
         }*/
 
-        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Melody MakerNotesOnly.ttf");
+        //Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Melody MakerNotesOnly.ttf");
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Wolfganger.otf");
 
         username = null;
         nLesson = 0;
@@ -107,10 +110,10 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
         txt1 = (TextView)findViewById(R.id.txt1);
         edLesson = (EditText)findViewById(R.id.edLesson);
         edStudent = (EditText)findViewById(R.id.edStudent);
-        btnSendAudio = (Button)findViewById(R.id.btnSendAudio);
+        btnSendAudio = (Button)findViewById(R.id.btnSendFeedback);
 
-        edStudent.setText("Student: " + username);
-        edLesson.setText("Stage " + nstage + " - Lesson Numb. " + nLesson);
+        edStudent.setText("Aluno: " + name);
+        edLesson.setText("Etapa " + nstage + " - Lição n." + nLesson);
 
         chkRecord = (CheckBox)findViewById(R.id.chkRecord);
         chkListen = (CheckBox)findViewById(R.id.chkListen);
@@ -128,6 +131,7 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
             public void onClick(View v) {
                 new SendAudioAsyncTask().execute();
                 //new doFileUpload();
+                //uploadFile(audioFilePath);
             }
         });
 
@@ -179,7 +183,7 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
     }
 
     //SEND AUDIO, FUNCIONA MAS PROVAVELMENTE CORROMPE O AUDIO
-    private class SendAudioAsyncTask extends AsyncTask<Void, Void, Void> {
+    /*private class SendAudioAsyncTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -233,6 +237,9 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
                 bytesAvailable = fileInputStream.available(); // create a buffer of  maximum size
                 bufferSize = Math.min(bytesAvailable, maxBufferSize);
                 buffer = new byte[bufferSize];
+
+
+
 
                 // read file and write it into form...
                 bytesRead = fileInputStream.read(buffer, 0, bufferSize);
@@ -300,6 +307,141 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
 
         }
 
+    }*/
+
+    private class SendAudioAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Showing progress dialog
+            pDialog = new ProgressDialog(AudioAppActivity.this);
+            pDialog.setMessage("Uploading Audio...Wait for it...");
+            pDialog.setCancelable(false);
+            pDialog.show();
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+
+            String upLoadServerUri = "http://conectguitarws-conectguitar.rhcloud.com/fileentry/add/" + student_id + "/" + nstage + "/" + nLesson ;
+            //String upLoadServerUri = "http://http://localhost:8000/conectguitarws/fileentry/add/" + student_id + "/" + nstage + "/" + nLesson ;
+            //String upLoadServerUri = "http://http://localhost:8000/fileentry/add/" + student_id + "/" + nstage + "/" + nLesson ;
+            String fileName = audioFilePath;
+            HttpURLConnection connection = null;
+            DataOutputStream outputStream = null;
+            DataInputStream inputStream = null;
+
+            //  String pathToOurFile = sourceFileUri;
+            String urlServer = upLoadServerUri;
+            String lineEnd = "\r\n";
+            String twoHyphens = "--";
+            String boundary = "*****";
+
+            int bytesRead, bytesAvailable, bufferSize;
+            byte[] buffer;
+            int maxBufferSize = 1 * 1024 * 1024;
+
+            try {
+                Log.w("----in try---", " ");
+
+                FileInputStream fileInputStream = new FileInputStream(new File(
+                        audioFilePath));
+
+                URL url = new URL(urlServer);
+                connection = (HttpURLConnection) url.openConnection();
+
+                // Allow Inputs & Outputs
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                connection.setUseCaches(false);
+
+                // Enable POST method
+                connection.setRequestMethod("POST");
+
+                connection = (HttpURLConnection) url.openConnection(); // Open a HTTP  connection to  the URL
+                connection.setDoInput(true); // Allow Inputs
+                connection.setDoOutput(true); // Allow Outputs
+                connection.setUseCaches(false); // Don't use a Cached Copy
+                connection.setRequestMethod("POST");
+
+                connection.setRequestProperty("Connection", "Keep-Alive");
+                //connection.setRequestProperty("Content-Type",
+                //        "multipart/form-data;boundary=" + boundary);
+                connection.setRequestProperty("Content-Type", "text/plain; charset=utf-8");
+                //connection.setRequestProperty("filefield", fileName);
+
+
+                //conn.setRequestProperty("Connection", "Keep-Alive");
+                //conn.setRequestProperty("ENCTYPE", "multipart/form-data");
+                //conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+                connection.setRequestProperty("filefield", fileName);
+
+                //dos.writeBytes("Content-Disposition: form-data; name=\"filefield\";filename=\""+ fileName + "\"" + lineEnd);
+
+                outputStream = new DataOutputStream(connection.getOutputStream());
+                outputStream.writeBytes(twoHyphens + boundary + lineEnd);
+                outputStream
+                        .writeBytes("Content-Disposition: form-data; name=\"filefield\";filename=\"" + audioFilePath + "\"" + lineEnd);
+                outputStream.writeBytes(lineEnd);
+
+                bytesAvailable = fileInputStream.available();
+                bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                buffer = new byte[bufferSize];
+
+                // Read file
+                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                while (bytesRead > 0)
+                {
+                    //Log.w("----while (bytesRead > 0)---", " ");
+
+                    outputStream.write(buffer, 0, bufferSize);
+                    bytesAvailable = fileInputStream.available();
+                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                }
+
+                outputStream.writeBytes(lineEnd);
+                outputStream.writeBytes(twoHyphens + boundary + twoHyphens
+                        + lineEnd);
+
+                // Responses from the server (code and message)
+                serverResponseCode = connection.getResponseCode();
+                String serverResponseMessage = connection.getResponseMessage();
+                Log.i("Test",""+serverResponseCode+"   "+serverResponseMessage);
+                fileInputStream.close();
+                outputStream.flush();
+                outputStream.close();
+            }
+            catch (Exception ex)
+            {
+                Log.i("test", " "+ex.getMessage());
+                ex.printStackTrace();
+                // Exception handling
+            } // end upLoad2Server
+
+            return null;
+
+        }
+
+
+        protected void onPostExecute(Void serverResponseCode) {
+
+            if (pDialog.isShowing())
+                pDialog.dismiss();
+
+            Toast.makeText(getBaseContext(), "Dados enviados com sucesso!", Toast.LENGTH_LONG).show();
+
+        }
+
+    }
+
+
+    /*public int uploadFile(String sourceFileUri) {
+
     }
 
     /*private class SendAudioAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -318,97 +460,36 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
         @Override
         protected Void doInBackground(Void... params) {
 
-        HttpURLConnection conn = null;
-        DataOutputStream dos = null;
-        DataInputStream inStream = null;
-        //String existingFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mypic.png";
-        String existingFileName = audioFilePath;
+            HttpClient httpclient = new DefaultHttpClient();
+            //Utilizamos la HttpPost para enviar lso datos
+            //A la url donde se encuentre nuestro archivo receptor
+            HttpPost httppost = new HttpPost("http://conectguitarws-conectguitar.rhcloud.com/fileentry/add/" + student_id + "/" + nstage + "/" + nLesson);
+            try {
+                //Añadimos los datos a enviar en este caso solo uno
+                //que le llamamos de nombre 'a'
+                //La segunda linea podría repetirse tantas veces como queramos
+                //siempre cambiando el nombre ('a')
+                List<NameValuePair> postValues = new ArrayList<NameValuePair>(2);
+                postValues.add(new BasicNameValuePair("a", dato));
+                //Encapsulamos
+                httppost.setEntity(new UrlEncodedFormEntity(postValues));
+                //Lanzamos la petición
+                HttpResponse respuesta = httpclient.execute(httppost);
+                //Conectamos para recibir datos de respuesta
+                HttpEntity entity = respuesta.getEntity();
+                //Creamos el InputStream como su propio nombre indica
+                InputStream is = entity.getContent();
+                //Limpiamos el codigo obtenido atraves de la funcion
+                //StreamToString explicada más abajo
+                String resultado= StreamToString(is);
 
-        String lineEnd = "\r\n";
-        String twoHyphens = "--";
-        String boundary = "*****";
-        int bytesRead, bytesAvailable, bufferSize;
-        byte[] buffer;
-        int maxBufferSize = 1 * 1024 * 1024;
-        String responseFromServer = "";
-        //String urlString = "http://mywebsite.com/directory/upload.php";
-        String urlString = "http://conectguitarws-conectguitar.rhcloud.com/fileentry/add/" + student_id + "/" + nstage + "/" + nLesson ;
-
-        try {
-
-            //------------------ CLIENT REQUEST
-            FileInputStream fileInputStream = new FileInputStream(new File(existingFileName));
-            // open a URL connection to the Servlet
-            URL url = new URL(urlString);
-            // Open a HTTP connection to the URL
-            conn = (HttpURLConnection) url.openConnection();
-            // Allow Inputs
-            conn.setDoInput(true);
-            // Allow Outputs
-            conn.setDoOutput(true);
-            // Don't use a cached copy.
-            conn.setUseCaches(false);
-            // Use a post method.
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Connection", "Keep-Alive");
-            conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-            conn.setRequestProperty("filefield", existingFileName);
-            dos = new DataOutputStream(conn.getOutputStream());
-            dos.writeBytes(twoHyphens + boundary + lineEnd);
-            dos.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + existingFileName + "\"" + lineEnd);
-            dos.writeBytes(lineEnd);
-            // create a buffer of maximum size
-            bytesAvailable = fileInputStream.available();
-            bufferSize = Math.min(bytesAvailable, maxBufferSize);
-            buffer = new byte[bufferSize];
-            // read file and write it into form...
-            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-
-            while (bytesRead > 0) {
-
-                dos.write(buffer, 0, bufferSize);
-                bytesAvailable = fileInputStream.available();
-                bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-
+                //Enviamos el resultado LIMPIO al Handler para mostrarlo
+                Message sms = new Message();
+                sms.obj = resultado;
+                puente.sendMessage(sms);
+            }catch (IOException e) {
+                //TODO Auto-generated catch block
             }
-
-            // send multipart form data necesssary after file data...
-            dos.writeBytes(lineEnd);
-            dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
-            // close streams
-            Log.e("Debug", "File is written");
-            fileInputStream.close();
-            dos.flush();
-            dos.close();
-
-        } catch (MalformedURLException ex) {
-            Log.e("Debug", "error: " + ex.getMessage(), ex);
-        } catch (IOException ioe) {
-            Log.e("Debug", "error: " + ioe.getMessage(), ioe);
-        }
-
-        //------------------ read the SERVER RESPONSE
-        try {
-
-            inStream = new DataInputStream(conn.getInputStream());
-            String str;
-
-            while ((str = inStream.readLine()) != null) {
-
-                Log.e("Debug", "Server Response " + str);
-
-            }
-
-            inStream.close();
-
-        } catch (IOException ioex) {
-            Log.e("Debug", "error: " + ioex.getMessage(), ioex);
-
-
-
-        }
-            return null;
         }
 
 
@@ -788,8 +869,23 @@ public class AudioAppActivity extends Activity implements View.OnClickListener {
     public void Interrogation(View view) {
 
         //Toast interrogation = Toast.makeText(AudioAppActivity.this, "To record or listen to a recorded audio, click Record, only to hear the lesson click Listen!", Toast.LENGTH_LONG);
-        Toast interrogation = Toast.makeText(AudioAppActivity.this, "Para gravar ou ouvir um Audio, Clique em Gravar, para somente ouvir uma lição, clique eu Ouvir!", Toast.LENGTH_LONG);
-        interrogation.show();
+        //Toast interrogation = Toast.makeText(Display.this, "Para gravar ou ouvir um Audio, Clique em Gravar, para somente ouvir uma lição, clique eu Ouvir!", Toast.LENGTH_LONG);
+        //interrogation.show();
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AudioAppActivity.this);
+        alertDialogBuilder.setTitle("ConectGuitar Tutorial");
+        alertDialogBuilder.setMessage("Para gravar ou ouvir um Audio, Clique em Gravar, para somente ouvir uma lição, clique eu Ouvir!");
+        alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int id) {
+
+            }
+
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
     }
 
 

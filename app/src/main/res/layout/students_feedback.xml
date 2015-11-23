@@ -1,5 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    android:background="#D8D8D8"
+    tools:context=".StudentsFeedback">
+
+    <ImageButton
+        android:id="@+id/guitarrista6"
+        android:src="@drawable/guitarrista6"
+        android:onClick="solo2"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+
+    <ImageButton
+        android:id="@+id/btnInterrogation"
+        android:textStyle="bold"
+        android:layout_marginLeft="10dp"
+        android:layout_width="23dp"
+        android:layout_height="23dp"
+        android:src="@drawable/interrogation"
+        android:onClick="Interrogation"/>
+
+    <Button
+        android:id="@+id/btnMedia"
+        android:text="@string/media"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onButtonClick"
+        />
+
+    <TextView
+        android:id="@+id/txt3"
+        android:text="Feedbacks:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/list" />
+
+
+
+
 
 </LinearLayout>

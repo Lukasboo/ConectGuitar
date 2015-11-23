@@ -3,6 +3,7 @@ package conectguitar.music.tcc.com.conectguitar.View;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -98,6 +99,8 @@ public class UpdateUser extends Activity {
 
         Intent intent = getIntent();
         student_id = intent.getIntExtra("student_id", 0);
+
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Wolfganger.otf");
 
         txtName = (TextView)findViewById(R.id.txtName);
         txtEmail = (TextView)findViewById(R.id.txtEmail);

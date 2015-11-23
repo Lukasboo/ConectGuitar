@@ -3,6 +3,7 @@ package conectguitar.music.tcc.com.conectguitar.View;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,6 +49,8 @@ public class UpdatePassword extends Activity {
         setContentView(R.layout.update_password);
 
         Button btnUpdatePassword = (Button)findViewById(R.id.btnUpdatePassword);
+
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Wolfganger.otf");
 
         Intent intent = getIntent();
         student_id = intent.getIntExtra("student_id", 0);

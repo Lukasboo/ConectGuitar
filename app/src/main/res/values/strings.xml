@@ -1,4 +1,5 @@
 <resources>
+    <string name="appname">ConectGuitar</string>
     <string name="app_name">ConectGuitar</string>
     <string name="action_settings">Settings</string>
 
@@ -23,6 +24,10 @@
     <string name="students">Aluno</string>
     <string name="media">Media</string>
 
+    <!-- StudeentsFeedback -->
+    <string name="feedbackm">Aqui estão os feedbacks do seu professor em relação aos exercícios enviados a ele!</string>
+    <string name="feedbackm2">Clique no feedback desejado para exclui-lo!</string>
+
     <!-- Stage -->
     <string name="stage1">Etapa 1</string>
     <string name="stage2">Etapa 2</string>
@@ -38,11 +43,13 @@
     <string name="lesson5">Aula 5</string>
 
     <!-- ActivityAudioApp -->
-    <string name="appname">TCC Conect Guitar</string>
     <string name="student">Aluno</string>
     <string name="record">Gravar</string>
     <string name="listen">Escutar</string>
     <string name="songduration">Duração</string>
+    <string name="title_activity_audio_teacher">AudioTeacherActivity</string>
+    <string name="title_activity_splash_screen">SplashScreen</string>
+    <string name="title_activity_splash_screen2">SplashScreen2</string>
 
     <!-- Main Activity
     <string name="Login">Login</string>

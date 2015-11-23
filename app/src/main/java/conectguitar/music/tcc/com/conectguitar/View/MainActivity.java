@@ -74,7 +74,14 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Melody MakerNotesOnly.ttf");
+        //Intent intent = new Intent(MainActivity.this, SplashScreen.class);
+        //startActivity(intent);
+
+        //Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Melody MakerNotesOnly.ttf");
+        //Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Pleasewritemeasong.ttf");
+        //Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Raggedways Regular.otf");
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Wolfganger.otf");
+        //Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/BeautifulEveryTime.ttf");
 
         BSignup = (Button)findViewById(R.id.BSignup);
         BLogin = (Button)findViewById(R.id.BLogin);
@@ -268,7 +275,7 @@ public class MainActivity extends Activity {
                             startActivity(intent);
                         } else {
 
-                            intent = new Intent(MainActivity.this, Stage.class);
+                            intent = new Intent(MainActivity.this, StudentsFeedback.class);
                             intent.putExtra("id", id);
                             intent.putExtra("student_id", student_id);
                             intent.putExtra("name", name);

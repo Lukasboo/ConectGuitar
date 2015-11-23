@@ -105,7 +105,8 @@ public class SignUp extends Activity {
         CheckBox teacher = (CheckBox)findViewById(R.id.chkTeacher);
         spinner=(Spinner)findViewById(R.id.spinner);
         teachersList = new ArrayList<User>();
-        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Melody MakerNotesOnly.ttf");
+        //Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Melody MakerNotesOnly.ttf");
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Wolfganger.otf");
 
         name = (EditText)findViewById(R.id.TFname);
         email = (EditText)findViewById(R.id.TFemail);

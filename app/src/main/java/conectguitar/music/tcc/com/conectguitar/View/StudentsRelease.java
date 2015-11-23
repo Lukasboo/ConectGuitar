@@ -5,11 +5,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.media.AudioManager;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,19 +31,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import conectguitar.music.tcc.com.conectguitar.Controller.AudiosConectGuitar;
 import conectguitar.music.tcc.com.conectguitar.Controller.AudiosList;
 import conectguitar.music.tcc.com.conectguitar.Controller.User;
 import conectguitar.music.tcc.com.conectguitar.Model.DatabaseHelper;
@@ -120,6 +113,8 @@ public class StudentsRelease extends Activity {
         //spinner = (Spinner)findViewById(R.id.spinner);
         btnSave = (Button)findViewById(R.id.btnSave);
 
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Wolfganger.otf");
+
         Intent intent = getIntent();
         students_Id = intent.getIntExtra("students_Id", 0);
         students_Name = intent.getStringExtra("students_Name");
@@ -176,12 +171,14 @@ public class StudentsRelease extends Activity {
                 //helper.insertAudioData(filename, original_filename, stage, lesson, student_id);
 
 
-                try {
-                    playAudio(filename);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-//                Toast.makeText(getBaseContext(), "Dados enviados com sucesso!", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(StudentsRelease.this, AudioTeacherActivity.class);
+                intent.putExtra("student_id", students_Id);
+                intent.putExtra("stage", stage);
+                intent.putExtra("lesson", lesson);
+                intent.putExtra("filename", filename);
+                intent.putExtra("original_filename", original_filename);
+                startActivity(intent);
+                //                Toast.makeText(getBaseContext(), "Dados enviados com sucesso!", Toast.LENGTH_LONG).show();
 
             }
         });
@@ -275,7 +272,11 @@ public class StudentsRelease extends Activity {
             if (pDialog.isShowing())
                 pDialog.dismiss();
 
-            Toast.makeText(getBaseContext(), "Dados enviados com sucesso!", Toast.LENGTH_LONG).show();
+            if(result.equals("EXITO!")) {
+                Toast.makeText(getBaseContext(), "Aluno alterado com sucesso!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getBaseContext(), "Erro ao atualizar!", Toast.LENGTH_LONG).show();
+            }
 
         }
     }
@@ -378,13 +379,13 @@ public class StudentsRelease extends Activity {
 
     }*/
 
-    private class DownloadFile extends AsyncTask<String, String, String> {
+    /*private class DownloadFile extends AsyncTask<String, String, String> {
 
         /**
          * Before starting background thread
          * Show Progress Bar Dialog
          * */
-        @Override
+        /*@Override
         protected void onPreExecute() {
             super.onPreExecute();
             showDialog(progress_bar_type);
@@ -393,7 +394,7 @@ public class StudentsRelease extends Activity {
         /**
          * Downloading file in background thread
          * */
-        @Override
+       /* @Override
         protected String doInBackground(String... f_url) {
             int count;
             try {
@@ -411,7 +412,7 @@ public class StudentsRelease extends Activity {
                                 Environment.DIRECTORY_MUSIC) + "/ConectGuitarAudios/" + "Stage" + stage + "/" + "Lesson" + lesson + "/" + original_filename);*/
                                 //Environment.DIRECTORY_MUSIC) + "/ConectGuitarAudios/" + "Stage" + stage + "/" + "Lesson" + lesson + "/" + "Lesson" + lesson + ".mp3");
 
-                downloadFilePath =
+                /*downloadFilePath =
                         (Environment.getExternalStoragePublicDirectory(
                                 Environment.DIRECTORY_MUSIC) + "/AudiosDownloads/" + filename + ".mp3");
 
@@ -456,7 +457,7 @@ public class StudentsRelease extends Activity {
         /**
          * Updating progress bar
          * */
-        protected void onProgressUpdate(String... progress) {
+        /*protected void onProgressUpdate(String... progress) {
             // setting progress percentage
             pDialog.setProgress(Integer.parseInt(progress[0]));
         }
@@ -465,7 +466,7 @@ public class StudentsRelease extends Activity {
          * After completing background task
          * Dismiss the progress dialog
          * **/
-        @Override
+       /* @Override
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after the file was downloaded
             dismissDialog(progress_bar_type);
@@ -483,7 +484,7 @@ public class StudentsRelease extends Activity {
             // setting downloaded into image view
             //my_image.setImageDrawable(Drawable.createFromPath(imagePath));
         }
-    }
+    }*/
 
     /**
      * Showing Dialog
@@ -556,7 +557,7 @@ public class StudentsRelease extends Activity {
 
     }*/
 
-    public void playAudio (String filename) throws IOException
+    /*public void playAudio (String filename) throws IOException
     {
 
          if (isPlaying) {
@@ -583,7 +584,7 @@ public class StudentsRelease extends Activity {
 
          }
 
-    }
+    }*/
 
 
 }

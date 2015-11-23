@@ -5,7 +5,9 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -55,16 +58,18 @@ import conectguitar.music.tcc.com.conectguitar.R;
  */
 public class Display extends AppCompatActivity {
 
-
+    ImageButton guitarrista5;
+    MediaPlayer mediaPlayer;
     DatabaseHelper helper = new DatabaseHelper(this);
 
     TextView students_Id, students_Name, students_Lesson, students_Filename, students_NStage, students_NLesson, students_ID;
 
     Button btnStudents;
     Button btnMedia;
+    ImageButton btnInterrogation;
     private ProgressDialog pDialog;
     ListView lv;
-
+    boolean isPlaying = false;
     private static final String TAG_USERS = "users";
     private static final String TAG_ID = "id";
     private static final String TAG_NAME = "name";
@@ -107,7 +112,11 @@ public class Display extends AppCompatActivity {
         /*SharedPreferences globalVar = getSharedPreferences("globalVariables", MODE_PRIVATE);
         idteacher = globalVar.getInt("idteacher", 0);*/
 
-        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Melody MakerNotesOnly.ttf");
+        //Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Melody MakerNotesOnly.ttf");
+        //Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Pleasewritemeasong.ttf");
+        //Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Raggedways Regular.otf");
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Wolfganger.otf");
+        //Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/BeautifulEveryTime.ttf");
 
         Intent intent = getIntent();
         usertype = 0;
@@ -119,18 +128,19 @@ public class Display extends AppCompatActivity {
         name = intent.getStringExtra("name");
 
         lv = (ListView) findViewById(R.id.list);
-
+        guitarrista5 = (ImageButton)findViewById(R.id.guitarrista5);
         btnStudents = (Button)findViewById(R.id.btnStudents);
         btnMedia = (Button)findViewById(R.id.btnMedia);
+        btnInterrogation = (ImageButton)findViewById(R.id.btnInterrogation);
         txt1 = (TextView)findViewById(R.id.txt1);
         txt2 = (TextView)findViewById(R.id.txt2);
         txt3 = (TextView)findViewById(R.id.txt3);
         txt4 = (TextView)findViewById(R.id.txt4);
         btnStudents.setTypeface(custom_font);
         btnMedia.setTypeface(custom_font);
-        txt1.setTypeface(custom_font);
+        /*txt1.setTypeface(custom_font);
         txt2.setTypeface(custom_font);
-        txt3.setTypeface(custom_font);
+        txt3.setTypeface(custom_font);*/
         txt4.setTypeface(custom_font);
         /*students_Id.setTypeface(custom_font);
         students_Name.setTypeface(custom_font);
@@ -265,6 +275,29 @@ public class Display extends AppCompatActivity {
         }
     }
 
+    public void Interrogation(View view) {
+
+        //Toast interrogation = Toast.makeText(AudioAppActivity.this, "To record or listen to a recorded audio, click Record, only to hear the lesson click Listen!", Toast.LENGTH_LONG);
+        //Toast interrogation = Toast.makeText(Display.this, "Para gravar ou ouvir um Audio, Clique em Gravar, para somente ouvir uma lição, clique eu Ouvir!", Toast.LENGTH_LONG);
+        //interrogation.show();
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Display.this);
+        alertDialogBuilder.setTitle(" ConectGuitar Tutorial");
+        alertDialogBuilder.setMessage("Clique em Aluno para ver o seus alunos ou em Media para ouvir todas as aulas disponíveis. Clique em Media para ouvir todas as aulas disponíveis. Abaixo está a lista de audios recentes enviados por seus alunos. Após voce baixar o audio ele não irá mais aparecer aqui neste tela!");
+        alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int id) {
+
+            }
+
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        // show alert
+        alertDialog.show();
+
+    }
+
     public File getAlbumStorageDownloadDir(String albumName) {
 
         File file = new File(Environment.getExternalStoragePublicDirectory(
@@ -351,24 +384,24 @@ public class Display extends AppCompatActivity {
     public void onButtonClick(View v){
 
         if(v.getId()==R.id.btnMedia) {
-            Intent i = new Intent(Display.this, Stage.class);
-            i.putExtra("id", id);
-            i.putExtra("student_id", student_id);
-            i.putExtra("usertype", usertype);
-            i.putExtra("idrelease", idrelease);
-            i.putExtra("name", name);
-            i.putExtra("idteacher", idteacher);
-            startActivity(i);
+            Intent intent = new Intent(Display.this, Stage.class);
+            intent.putExtra("id", id);
+            intent.putExtra("student_id", student_id);
+            intent.putExtra("usertype", usertype);
+            intent.putExtra("idrelease", idrelease);
+            intent.putExtra("name", name);
+            intent.putExtra("idteacher", idteacher);
+            startActivity(intent);
         }
 
         if(v.getId()==R.id.btnStudents) {
-            Intent i = new Intent(Display.this, Students.class);
-            i.putExtra("usertype", usertype);
-            i.putExtra("idrelease", idrelease);
-            i.putExtra("name", name);
-            i.putExtra("idteacher", idteacher);
-            i.putExtra("id", id);
-            startActivity(i);
+            Intent intent = new Intent(Display.this, Students.class);
+            intent.putExtra("usertype", usertype);
+            intent.putExtra("idrelease", idrelease);
+            intent.putExtra("name", name);
+            intent.putExtra("idteacher", idteacher);
+            intent.putExtra("id", id);
+            startActivity(intent);
         }
 
     }
@@ -711,6 +744,30 @@ public class Display extends AppCompatActivity {
             //    Toast.makeText(getBaseContext(), "Erro ao deletar usuário!", Toast.LENGTH_LONG).show();
             //}
         }
+    }
+
+    public void solo1(View view) {
+
+        if (isPlaying) {
+            isPlaying = false;
+            mediaPlayer.stop();
+            mediaPlayer.release();
+        } else {
+            isPlaying = true;
+            mediaPlayer = new MediaPlayer();
+            AssetFileDescriptor descriptor = null;
+            try {
+                descriptor = Display.this.getAssets().openFd("solo1.mp3");
+                mediaPlayer.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
+                descriptor.close();
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
     }
 
     /*private class DownloadFile extends AsyncTask<String, String, String> {

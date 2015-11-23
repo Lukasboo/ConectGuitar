@@ -85,7 +85,7 @@
             android:onClick="Interrogation"/>
 
         <Button
-            android:id="@+id/btnSendAudio"
+            android:id="@+id/btnSendFeedback"
             android:text="Enviar Audio"
             android:layout_gravity="right"
             android:layout_width="wrap_content"
